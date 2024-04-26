@@ -1,8 +1,4 @@
-import api from "../configs/apiKey.json";
-
 async function updateCWTicketStatus(json) {
-  // json.status.id = 499;
-
   const modifiedJson = {
     ...json,
     status: {
