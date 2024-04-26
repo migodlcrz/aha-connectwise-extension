@@ -1,4 +1,4 @@
-async function updateCWTicketStatus(json) {
+async function updateCWTicketStatus(json, ticketId) {
   const modifiedJson = {
     ...json,
     status: {
@@ -8,7 +8,7 @@ async function updateCWTicketStatus(json) {
   };
 
   const response = await fetch(
-    "https://sandbox-na.myconnectwise.net/v4_6_release/apis/3.0/service/tickets/100",
+    `https://sandbox-na.myconnectwise.net/v4_6_release/apis/3.0/service/tickets/${ticketId}`,
     {
       method: "PUT",
       headers: {
@@ -30,18 +30,18 @@ async function updateCWTicketStatus(json) {
   }
 
   if (!response.ok) {
-    console.log("Fail");
+    console.log("API call failed.");
   }
 }
 
-async function getCWTicket(arg) {
+async function getCWTicket(arg, ticketId) {
   console.log(`Status: ${arg.changes.workflowStatus.to.attributes.name}`);
   if (arg.changes.workflowStatus.to.attributes.name === "Released") {
     console.log("Status == Released. Api called.");
 
     try {
       const response = await fetch(
-        "https://sandbox-na.myconnectwise.net/v4_6_release/apis/3.0/service/tickets/100?conditions=status/name='New'",
+        `https://sandbox-na.myconnectwise.net/v4_6_release/apis/3.0/service/tickets/${ticketId}?conditions=status/name='New'`,
         {
           method: "GET",
           headers: {
@@ -56,11 +56,11 @@ async function getCWTicket(arg) {
       const json = await response.json();
 
       if (response.ok) {
-        updateCWTicketStatus(json);
+        updateCWTicketStatus(json, ticketId);
       }
 
       if (!response.ok) {
-        console.log("Response not OK.");
+        console.log("API call failed.");
       }
     } catch (error) {
       console.log(error);
@@ -73,5 +73,6 @@ async function getCWTicket(arg) {
 export default getCWTicket;
 
 aha.on({ event: "aha.update.Feature.workflowStatus" }, (arg) => {
-  getCWTicket(arg);
+  const ticketId = 100;
+  getCWTicket(arg, ticketId);
 });
