@@ -1,6 +1,6 @@
 import api from "../configs/apiKey.json";
 
-async function callAPI(arg) {
+async function callAPI(arg, props) {
   console.log(`Status: ${arg.changes.workflowStatus.to.attributes.name}`);
   if (arg.changes.workflowStatus.to.attributes.name === "Released") {
     console.log("Status == Released. Api called.");
@@ -21,6 +21,7 @@ async function callAPI(arg) {
 
       if (response.ok) {
         console.log(`Response: ${JSON.stringify(json.status)}`);
+        console.log(`Props: ${props}`);
       }
 
       if (!response.ok) {
@@ -36,6 +37,6 @@ async function callAPI(arg) {
 
 export default callAPI;
 
-aha.on({ event: "aha.update.Feature.workflowStatus" }, (arg) => {
-  callAPI(arg);
+aha.on({ event: "aha.update.Feature.workflowStatus" }, (arg, props) => {
+  callAPI(arg, props);
 });
