@@ -24,7 +24,9 @@ async function updateCWTicketStatus(json) {
   const ticket = await response.json();
 
   if (response.ok) {
-    console.log(JSON.stringify(ticket));
+    console.log(
+      `Status was successfully updated to ${JSON.stringify(ticket.status.name)}`
+    );
   }
 
   if (!response.ok) {
